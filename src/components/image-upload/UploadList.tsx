@@ -7,7 +7,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Upload, Download, FileArchive, Trash2, Image } from 'lucide-react';
+import { Upload, Download, FileArchive, Trash2 } from 'lucide-react';
 import Preview from './Preview';
 import { downloadImage, downloadImagesAsZip } from '@/utils/exportUtils';
 import { exifStampSettingsAtom } from '@/stores/states/exifStampSettings';
@@ -171,6 +171,27 @@ const UploadList = () => {
         }
     };
 
+    // Remove a single image and adjust selection
+    const handleRemove = (removeIdx: number) => {
+        const updated = images.filter((_, i) => i !== removeIdx);
+        setImages(updated);
+        if (index !== null) {
+            if (removeIdx < index) {
+                setIndex(index - 1);
+            } else if (removeIdx === index) {
+                if (updated.length > 0) {
+                    const newIndex =
+                        removeIdx < updated.length
+                            ? removeIdx
+                            : updated.length - 1;
+                    setIndex(newIndex);
+                } else {
+                    setIndex(null);
+                }
+            }
+        }
+    };
+
     return (
         <div className="space-y-4 p-4">
             <div className="space-y-4 md:flex md:h-[calc(100vh-100px)] md:space-y-0 md:space-x-4">
@@ -255,28 +276,45 @@ const UploadList = () => {
                                     {images.map((img, idx) => (
                                         <div
                                             key={idx}
-                                            onClick={() => handleSelect(idx)}
-                                            className={`flex cursor-pointer items-center rounded-md p-1 transition-all ${index === idx ? 'bg-muted ring-primary ring-2 ring-offset-2' : 'hover:bg-muted/50'}`}
+                                            className={`flex items-center justify-between rounded-md p-1 transition-all ${index === idx ? 'bg-muted ring-primary ring-2 ring-offset-2' : 'hover:bg-muted/50'}`}
                                         >
-                                            <div className="relative h-16 w-16 flex-shrink-0">
-                                                <img
-                                                    src={`data:${img.mime};base64,${img.base64}`}
-                                                    alt={`thumb-${idx}`}
-                                                    className="h-full w-full rounded-md object-cover"
-                                                />
+                                            <div
+                                                onClick={() =>
+                                                    handleSelect(idx)
+                                                }
+                                                className="flex flex-1 cursor-pointer items-center"
+                                            >
+                                                <div className="relative h-16 w-16 flex-shrink-0">
+                                                    <img
+                                                        src={`data:${img.mime};base64,${img.base64}`}
+                                                        alt={`thumb-${idx}`}
+                                                        className="h-full w-full rounded-md object-cover"
+                                                    />
+                                                </div>
+                                                <div className="ml-2 flex-1 overflow-hidden">
+                                                    <p className="truncate text-sm font-medium">
+                                                        {img.fileName ||
+                                                            `Image ${idx + 1}`}
+                                                    </p>
+                                                    <p className="text-muted-foreground text-xs">
+                                                        {(img.mime || '')
+                                                            .split('/')[1]
+                                                            ?.toUpperCase() ||
+                                                            'Image'}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="ml-2 flex-1 overflow-hidden">
-                                                <p className="truncate text-sm font-medium">
-                                                    {img.fileName ||
-                                                        `Image ${idx + 1}`}
-                                                </p>
-                                                <p className="text-muted-foreground text-xs">
-                                                    {(img.mime || '')
-                                                        .split('/')[1]
-                                                        ?.toUpperCase() ||
-                                                        'Image'}
-                                                </p>
-                                            </div>
+                                            <button
+                                                onClick={() =>
+                                                    handleRemove(idx)
+                                                }
+                                                className="ml-2 rounded-full bg-red-50 p-1 text-red-600 hover:bg-red-100 hover:text-red-800 focus:ring-2 focus:ring-red-200 focus:outline-none"
+                                                aria-label={t(
+                                                    'upload.removeImage'
+                                                )}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
@@ -306,12 +344,35 @@ const UploadList = () => {
                                                     key={idx}
                                                     value={idx.toString()}
                                                 >
-                                                    <div className="flex items-center">
-                                                        <Image className="mr-2 h-4 w-4" />
-                                                        <span>
-                                                            {img.fileName ||
-                                                                `Image ${idx + 1}`}
-                                                        </span>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center">
+                                                            <img
+                                                                src={`data:${img.mime};base64,${img.base64}`}
+                                                                alt={
+                                                                    img.fileName ||
+                                                                    `Image ${idx + 1}`
+                                                                }
+                                                                className="mr-2 h-6 w-6 rounded-md object-cover"
+                                                            />
+                                                            <span className="truncate">
+                                                                {img.fileName ||
+                                                                    `Image ${idx + 1}`}
+                                                            </span>
+                                                        </div>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleRemove(
+                                                                    idx
+                                                                );
+                                                            }}
+                                                            className="ml-2 p-1 text-red-500 hover:text-red-700 focus:outline-none"
+                                                            aria-label={t(
+                                                                'upload.removeImage'
+                                                            )}
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </button>
                                                     </div>
                                                 </SelectItem>
                                             ))}
