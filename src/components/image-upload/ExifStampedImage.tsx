@@ -20,7 +20,8 @@ const generateCacheKey = (
     image: ImageType,
     settings: ExifStampSettings
 ): string => {
-    return `${image.base64?.substring(0, 20)}_${settings.position}_${Object.values(settings.fields).join('_')}`;
+    // Include full base64 to ensure unique keys per image
+    return `${image.base64}_${settings.position}_${Object.values(settings.fields).join('_')}`;
 };
 
 interface ExifStampedImageProps {
