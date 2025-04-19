@@ -33,6 +33,10 @@ const measureTextWidth = (
     return tempText.width();
 };
 
+const hasNaN = (value: number[]): boolean => {
+    return value.some((v) => isNaN(v));
+};
+
 // Shared function to render EXIF stamp - returns a Konva stage
 export const createExifStampedKonvaStage = (
     img: HTMLImageElement,
@@ -107,7 +111,10 @@ export const createExifStampedKonvaStage = (
     }
     if (
         settings.fields.gpsCoordinates &&
-        (image.exif.GPSLatitude || image.exif.GPSLongitude)
+        image.exif.GPSLatitude &&
+        image.exif.GPSLongitude &&
+        !hasNaN(image.exif.GPSLatitude) &&
+        !hasNaN(image.exif.GPSLongitude)
     ) {
         const lat = image.exif.GPSLatitude
             ? formatGPS(image.exif.GPSLatitude, image.exif.GPSLatitudeRef)

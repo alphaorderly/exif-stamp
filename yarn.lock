@@ -1276,6 +1276,11 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
+"@types/android-device-list@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@types/android-device-list/-/android-device-list-1.2.3.tgz#82fc47eeff9a267e3b6acb18a8a2a854591bf53d"
+  integrity sha512-8yXcPPOKb6b5isGjGKVgUUcfjqrxJe4Xr5bYO8/72PJ7VeVsxp2+6CArWkqLFLhFDRK3B8Ir2iXZ5zdKrDLtmQ==
+
 "@types/aria-query@^5.0.1":
   version "5.0.4"
   resolved "https://registry.yarnpkg.com/@types/aria-query/-/aria-query-5.0.4.tgz#1a31c3d378850d2778dabb6374d036dcba4ba708"
@@ -1575,6 +1580,11 @@ ajv@^8.11.0:
     fast-uri "^3.0.1"
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
+
+android-device-list@^1.2.10:
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/android-device-list/-/android-device-list-1.2.10.tgz#db332b0b5c6b1b8b95fb8552278b167f587e3b25"
+  integrity sha512-RNvY+pPW8jVyDDHs8dBMbuakcpcm2SqR1dV+PcBjE0qQe0MND2F30+JaRq6PWMYBGjNVaUi3uuA+iPmRN5gjuA==
 
 ansi-align@^3.0.1:
   version "3.0.1"
