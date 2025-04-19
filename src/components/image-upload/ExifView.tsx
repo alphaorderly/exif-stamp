@@ -31,7 +31,7 @@ const ExifView: React.FC<ExifViewProps> = ({ exif }) => {
         <Accordion
             type="single"
             collapsible
-            className="bg-card text-card-foreground w-full gap-2 border pb-2 shadow-sm"
+            className="bg-card text-card-foreground w-full gap-2 rounded-xl border p-4 pt-2 shadow-sm"
         >
             <AccordionItem value="metadata">
                 <AccordionTrigger className="cursor-pointer pb-3">
@@ -43,7 +43,7 @@ const ExifView: React.FC<ExifViewProps> = ({ exif }) => {
                     </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                    <div className="grid grid-cols-1 gap-x-6 gap-y-4 pt-0 pb-2 text-sm sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-x-6 gap-y-4 pt-0 pt-3 text-sm sm:grid-cols-2">
                         {/* Use a helper component for consistent styling */}
                         {exif.Make && (
                             <ExifField
