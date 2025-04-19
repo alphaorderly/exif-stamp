@@ -1,0 +1,55 @@
+{
+    "app": {
+        "title": "EXIF-스탬프"
+    },
+    "upload": {
+        "gallery": "갤러리",
+        "selectImages": "이미지 선택",
+        "exportSelected": "선택한 이미지 내보내기",
+        "exportAllZip": "모두 내보내기 (ZIP)",
+        "resetImages": "이미지 초기화",
+        "noImagesUploaded": "업로드된 이미지 없음",
+        "selectImage": "이미지 선택"
+    },
+    "preview": {
+        "title": "미리보기",
+        "selectToPreview": "미리보기할 이미지를 선택하세요"
+    },
+    "exif": {
+        "metadata": "EXIF 메타데이터",
+        "make": "제조사",
+        "model": "모델",
+        "orientation": "방향",
+        "dateTaken": "촬영 날짜",
+        "latitude": "위도",
+        "longitude": "경도"
+    },
+    "stamp": {
+        "title": "EXIF 스탬핑 옵션",
+        "enable": "EXIF 스탬핑 활성화",
+        "on": "켜기",
+        "off": "끄기",
+        "position": "위치",
+        "fields": "EXIF 필드",
+        "positionOptions": {
+            "insideBottom": "내부 하단",
+            "insideTop": "내부 상단",
+            "outsideBottom": "외부 하단",
+            "outsideTop": "외부 상단"
+        },
+        "fieldLabels": {
+            "make": "제조사",
+            "model": "모델",
+            "date": "날짜",
+            "gps": "GPS"
+        }
+    },
+    "alerts": {
+        "selectToExport": "내보낼 이미지를 선택해 주세요.",
+        "noImagesToExport": "내보낼 이미지가 없습니다."
+    },
+    "language": {
+        "en": "English",
+        "ko": "한국어"
+    }
+}

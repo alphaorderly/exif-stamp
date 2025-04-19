@@ -1,0 +1,56 @@
+{
+    "app": {
+        "title": "EXIF-STAMP"
+    },
+    "upload": {
+        "gallery": "Gallery",
+        "selectImages": "Select Images",
+        "exportSelected": "Export Selected",
+        "exportAllZip": "Export All (ZIP)",
+        "resetImages": "Reset Images",
+        "noImagesUploaded": "No images uploaded",
+        "selectImage": "Select image",
+        "convertingHeif": "Converting HEIF/HEIC"
+    },
+    "preview": {
+        "title": "Preview",
+        "selectToPreview": "Select an image to preview"
+    },
+    "exif": {
+        "metadata": "EXIF Metadata",
+        "make": "Make",
+        "model": "Model",
+        "orientation": "Orientation",
+        "dateTaken": "Date Taken",
+        "latitude": "Latitude",
+        "longitude": "Longitude"
+    },
+    "stamp": {
+        "title": "EXIF Stamping Options",
+        "enable": "Enable EXIF Stamping",
+        "on": "ON",
+        "off": "OFF",
+        "position": "Position",
+        "fields": "EXIF Fields",
+        "positionOptions": {
+            "insideBottom": "Inside Bottom",
+            "insideTop": "Inside Top",
+            "outsideBottom": "Outside Bottom",
+            "outsideTop": "Outside Top"
+        },
+        "fieldLabels": {
+            "make": "Make",
+            "model": "Model",
+            "date": "Date",
+            "gps": "GPS"
+        }
+    },
+    "alerts": {
+        "selectToExport": "Please select an image to export.",
+        "noImagesToExport": "No images to export."
+    },
+    "language": {
+        "en": "English",
+        "ko": "한국어"
+    }
+}
