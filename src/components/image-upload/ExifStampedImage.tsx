@@ -11,6 +11,7 @@ import type { ImageType } from '@/stores/states/image';
 import type { ExifStampSettings } from '@/stores/states/exifStampSettings';
 import { exifStampSettingsAtom } from '@/stores/states/exifStampSettings';
 import { createExifStampedKonvaStage } from '@/utils/exifStampRenderer';
+import { X } from 'lucide-react';
 
 // Cache for storing processed images to avoid reprocessing the same image with the same settings
 const imageCache = new Map<string, string>();
@@ -45,8 +46,10 @@ const ExifStampedImage: React.FC<ExifStampedImageProps> = React.memo(
             height: number;
         }>({ width: 0, height: 0 });
         const [isProcessing, setIsProcessing] = useState<boolean>(false);
+        const [isEnlarged, setIsEnlarged] = useState<boolean>(false);
         const stageRef = useRef<any>(null);
         const processingTimerRef = useRef<any>(null);
+        const modalRef = useRef<HTMLDivElement>(null);
 
         // Extract only the settings we care about to prevent unnecessary rerenders
         const relevantSettings = useMemo(
@@ -84,15 +87,49 @@ const ExifStampedImage: React.FC<ExifStampedImageProps> = React.memo(
         const cacheKey = useMemo(
             () =>
                 image.base64 ? generateCacheKey(image, relevantSettings) : '',
-            [image.base64, relevantSettings]
+            [image, relevantSettings]
         );
+
+        // Handle click outside the modal to close it
+        useEffect(() => {
+            const handleClickOutside = (event: MouseEvent) => {
+                if (
+                    modalRef.current &&
+                    !modalRef.current.contains(event.target as Node) &&
+                    isEnlarged
+                ) {
+                    setIsEnlarged(false);
+                }
+            };
+
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }, [isEnlarged]);
+
+        // Handle escape key to close modal
+        useEffect(() => {
+            const handleEscKey = (event: KeyboardEvent) => {
+                if (event.key === 'Escape' && isEnlarged) {
+                    setIsEnlarged(false);
+                }
+            };
+
+            document.addEventListener('keydown', handleEscKey);
+            return () => {
+                document.removeEventListener('keydown', handleEscKey);
+            };
+        }, [isEnlarged]);
 
         // Clean up any previous Konva resources when component unmounts
         useEffect(() => {
+            const currentStageRef = stageRef;
             return () => {
-                if (stageRef.current) {
-                    stageRef.current.destroyChildren();
-                    stageRef.current.destroy();
+                const currentStage = currentStageRef.current;
+                if (currentStage) {
+                    currentStage.destroyChildren();
+                    currentStage.destroy();
                 }
                 if (processingTimerRef.current) {
                     clearTimeout(processingTimerRef.current);
@@ -170,8 +207,9 @@ const ExifStampedImage: React.FC<ExifStampedImageProps> = React.memo(
                 }
 
                 // Clean up any existing stage content
-                if (stageRef.current) {
-                    stageRef.current.destroyChildren();
+                const currentStage = stageRef.current;
+                if (currentStage) {
+                    currentStage.destroyChildren();
                 }
 
                 // Use the utility function to get data URL
@@ -241,27 +279,81 @@ const ExifStampedImage: React.FC<ExifStampedImageProps> = React.memo(
             relevantSettings.enabled,
         ]);
 
+        // Handler to open enlarged image modal
+        const handleImageClick = () => {
+            setIsEnlarged(true);
+        };
+
+        // Handler to close enlarged image modal
+        const handleCloseModal = () => {
+            setIsEnlarged(false);
+        };
+
+        // Enlarged image modal component
+        const EnlargedImageModal = () => {
+            if (!isEnlarged) return null;
+
+            const imageSrc =
+                relevantSettings.enabled && dataUrl
+                    ? dataUrl
+                    : `data:${image.mime};base64,${image.base64}`;
+
+            return (
+                <div
+                    className="fixed inset-0 z-50 flex touch-none items-center justify-center bg-black/70 p-4"
+                    onClick={handleCloseModal}
+                >
+                    <div
+                        ref={modalRef}
+                        className="relative max-h-[90vh] max-w-[90vw] overflow-auto rounded-lg bg-white dark:bg-gray-800"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className="absolute top-2 right-2 z-10 rounded-full bg-black/50 p-1 text-white hover:bg-black/70"
+                            onClick={handleCloseModal}
+                            aria-label="Close"
+                        >
+                            <X className="h-6 w-6" />
+                        </button>
+                        <img
+                            src={imageSrc}
+                            alt="Enlarged preview"
+                            className="h-auto max-h-[90vh] w-auto max-w-[90vw] object-contain"
+                        />
+                    </div>
+                </div>
+            );
+        };
+
         // If settings are disabled, just show the original image
         if (!relevantSettings.enabled) {
             return (
-                <img
-                    src={`data:${image.mime};base64,${image.base64}`}
-                    alt="preview"
-                    className={className}
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                />
+                <>
+                    <img
+                        src={`data:${image.mime};base64,${image.base64}`}
+                        alt="preview"
+                        className={`${className} cursor-pointer`}
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        onClick={handleImageClick}
+                    />
+                    <EnlargedImageModal />
+                </>
             );
         }
 
         // If we have a rendered data URL, use it
         if (dataUrl) {
             return (
-                <img
-                    src={dataUrl}
-                    alt="preview with EXIF data"
-                    className={className}
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                />
+                <>
+                    <img
+                        src={dataUrl}
+                        alt="preview with EXIF data"
+                        className={`${className} cursor-pointer`}
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        onClick={handleImageClick}
+                    />
+                    <EnlargedImageModal />
+                </>
             );
         }
 
